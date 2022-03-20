@@ -7,18 +7,18 @@ import torch
 import numpy as np
 import torch.nn as nn
 
-
 seed = 1
 torch.manual_seed(seed)
 np.random.seed(seed)
 torch.set_default_dtype(torch.float)
 
+
 # Actor Net
 # Actor：输入是state，输出的是一个确定性的action
 class Actor(nn.Module):
     def __init__(self, state_dim, action_dim, action_bound):
-        super(Actor,self).__init__()
-        self.action_bound = torch.tensor(action_bound)
+        super(Actor, self).__init__()
+        self.action_bound = torch.FloatTensor(action_bound)
 
         # layer
         self.layer_1 = nn.Linear(state_dim, 30)
@@ -37,11 +37,13 @@ class Actor(nn.Module):
         scaled_a = a * self.action_bound
         return scaled_a
 
+
 # Critic Net
 # Critic输入的是当前的state以及Actor输出的action,输出的是Q-value
 class Critic(nn.Module):
+
     def __init__(self, state_dim, action_dim):
-        super(Critic,self).__init__()
+        super(Critic, self).__init__()
         n_layer = 30
         # layer
         self.layer_1 = nn.Linear(state_dim, n_layer)
@@ -54,7 +56,7 @@ class Critic(nn.Module):
         
         self.output = nn.Linear(n_layer, 1)
 
-    def forward(self,s,a):
+    def forward(self, s, a):
         
         s = self.layer_1(s)
         a = self.layer_2(a)
@@ -64,11 +66,11 @@ class Critic(nn.Module):
 
 # Deep Deterministic Policy Gradient
 class DDPG(object):
-    def __init__(self, state_dim, action_dim, action_bound, replacement,memory_capacticy=1000,gamma=0.9,lr_a=0.001, lr_c=0.002,batch_size=32) :
-        super(DDPG,self).__init__()
+    def __init__(self, state_dim, action_dim, action_bound, replacement,memory_capacity=1000,gamma=0.9,lr_a=0.001, lr_c=0.002,batch_size=32) :
+        super(DDPG, self).__init__()
         self.state_dim = state_dim
         self.action_dim = action_dim
-        self.memory_capacticy = memory_capacticy
+        self.memory_capacity = memory_capacity
         self.replacement = replacement
         self.t_replace_counter = 0
         self.gamma = gamma
@@ -77,7 +79,7 @@ class DDPG(object):
         self.batch_size = batch_size
 
         # 记忆库
-        self.memory = np.zeros((memory_capacticy, state_dim * 2 + action_dim + 1))
+        self.memory = np.zeros((memory_capacity, state_dim * 2 + action_dim + 1))
         self.pointer = 0
         # 定义 Actor 网络
         self.actor = Actor(state_dim, action_dim, action_bound)
@@ -90,10 +92,9 @@ class DDPG(object):
         self.copt = torch.optim.Adam(self.critic.parameters(), lr=lr_c)
         # 选取损失函数
         self.mse_loss = nn.MSELoss()
-        
 
     def sample(self):
-        indices = np.random.choice(self.memory_capacticy, size=self.batch_size)
+        indices = np.random.choice(self.memory_capacity, size=self.batch_size)
         return self.memory[indices, :] 
 
     def choose_action(self, s):
@@ -162,12 +163,8 @@ class DDPG(object):
         td_error.backward()
         self.copt.step()
 
-    
     def store_transition(self, s, a, r, s_):
-        transition = np.hstack((s,a,[r],s_))
-        index = self.pointer % self.memory_capacticy
+        transition = np.hstack((s, a, [r], s_))
+        index = self.pointer % self.memory_capacity
         self.memory[index, :] = transition
         self.pointer += 1
-
-
-    

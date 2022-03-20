@@ -1,8 +1,7 @@
 import gym
 import time
 import numpy as np
-from DDPG_torch import DDPG
-
+from DDPG import DDPG
 
 
 if __name__ == '__main__':
