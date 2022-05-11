@@ -16,7 +16,7 @@ if __name__ == '__main__':
         dict(name='hard', rep_iter=600)
     ][0]            # you can try different target replacement strategies
 
-    ENV_NAME = 'Pendulum-v0'
+    ENV_NAME = 'Pendulum-v1'
     RENDER = False
 
     # train
@@ -31,7 +31,7 @@ if __name__ == '__main__':
                 action_dim=a_dim,
                 action_bound=a_bound, 
                 replacement=REPLACEMENT,
-                memory_capacticy=MEMORY_CAPACITY)
+                memory_capacity=MEMORY_CAPACITY)
 
     t1 = time.time()
     for i in range(MAX_EPISODES):
