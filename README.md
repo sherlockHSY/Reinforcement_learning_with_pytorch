@@ -22,6 +22,7 @@ Implement some algorithms of RL
 - [x] D3QN(DuelingDoubleDQN)
 - [x] DDPG
 - [x] PPO
+- [x] SQL
 - [x] SAC
 - [x] SAC_Discrete
 
