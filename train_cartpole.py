@@ -27,6 +27,7 @@ from model_free.Dueling_DQN.dueling_dqn import DuelingDQN
 from model_free.Dueling_Double_DQN.d3qn import D3QN
 # from Dueling_Double_DQN.d3qn_prioritized_replay import D3QN as D3QN_PER
 
+from model_free.Soft_Q_Learning.SoftQLearning import SoftQLearning
 from model_free.SAC.sac_discrete import SAC_Discrete
 from model_free.SAC.sac_discrete_2 import SAC_Discrete as SAC_Discrete_2
 
@@ -236,6 +237,7 @@ name_to_group_class_dictionary = {
         "DDPG": {"group": "Actor_Critic_Agents", "class": D3QN},
         "A2C": {"group": "Actor_Critic_Agents", "class": A2C},
         "A3C": {"group": "Actor_Critic_Agents", "class": D3QN},
+        "SQL": {"group": "SAC", "class": SoftQLearning},
         "SAC": {"group": "SAC", "class": SAC_Discrete},
         "SAC_Discrete": {"group": "SAC", "class": SAC_Discrete},
         "SAC_Discrete_2": {"group": "SAC", "class": SAC_Discrete_2},
@@ -258,12 +260,12 @@ np.random.seed(seed)
 # init agent
 agent_group = name_to_group_class_dictionary[agent_name]["group"]
 agent_class = name_to_group_class_dictionary[agent_name]["class"]
-
 agent_config = hyperparameters[agent_group]
 agent = agent_class(state_dim=state_dim,
                     action_dim=action_dim,
                     config=agent_config,
                     device=device)
+
 update_mode = agent_config["update_mode"]
 # Writer will output to ./runs/ directory by default
 dir_name = "./runs/cartpole/" + agent_name + '_' + update_mode + '_update/'
