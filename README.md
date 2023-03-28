@@ -11,6 +11,9 @@ Implement some algorithms of RL
 - tensorboard
 
 ## Implemented algorithms
+### Bandit algorithms
+- [x] UCB
+- [x] LinUCB
 
 ### Model-free algorithms
 - [ ] REINFORCE
